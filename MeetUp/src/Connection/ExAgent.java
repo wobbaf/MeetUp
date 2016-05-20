@@ -1,4 +1,5 @@
 package Connection;
+import parser.XMLRead;
 import jade.core.*;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
@@ -25,10 +26,12 @@ public class ExAgent extends Agent{
 			 ACLMessage rec = receive(mt);
 			 if(rec != null){
 				 System.out.println(this.getAgent().getName() + " recieved from " + rec.getSender().getName());
-				 if (rec.getPerformative() == ACLMessage.INFORM){
-					 accept.addReceiver(new AID(agentID, AID.ISLOCALNAME));
-						send(accept);
-				 }
+				 XMLRead read = new XMLRead();
+				 read.Read(rec.getContent());
+				 System.out.println("Location " + read.getLocation());
+					 String content = setContent("0", "Server","52.22233 21.00690",null,null);
+					 sendMessage(inform,rec.getSender(),content,ACLMessage.INFORM);
+				 
 			 }
 		 }
 	};
@@ -46,7 +49,8 @@ public class ExAgent extends Agent{
 				addBehaviour(b);
 			}
 		};
-		addBehaviour(b1);		
+		addBehaviour(b);
+		//addBehaviour(b1);		
 	}
 
 	private String setContent(String type, String id, String location, String state, String time){

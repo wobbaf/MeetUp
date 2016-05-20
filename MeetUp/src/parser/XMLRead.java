@@ -21,7 +21,13 @@ public class XMLRead {
 	public static String[] list;
 	public static String id;
 	public static String state;
-	public static String location;
+	public String location;
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
+	}
 	public static String time;
 	public static String type;
 	public static String result;
@@ -29,12 +35,15 @@ public class XMLRead {
 	public XMLRead(){
 		instance = this;
 	}
-	public static void Read(String xml){
+	public void Read(String xml){
+		if(xml!=null)
+		{
 		    try  
 		    {  
 		    	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		    	DocumentBuilder builder = factory.newDocumentBuilder();
-		    	Document document = builder.parse(new InputSource(new StringReader(xml)));
+		    	InputSource in = new InputSource(new StringReader(xml));
+		    	Document document = builder.parse(in);
 		    	Element rootElement = document.getDocumentElement();
 		    	//rootElement.getAttribute(id);
 		    	type = getString("type",rootElement);
@@ -54,6 +63,7 @@ public class XMLRead {
 		    } catch (Exception e) {  
 		        e.printStackTrace();  
 		    } 
+		}
 	   }
 	protected static String getString(String tagName, Element element) {
         NodeList list = element.getElementsByTagName(tagName);
