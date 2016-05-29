@@ -17,7 +17,7 @@ public class Server extends Agent{
 	ACLMessage recm;
 	String agentID = "Server";
 	
-	AID receiver = new AID(agentID,AID.ISLOCALNAME);
+	//AID receiver = new AID(agentID,AID.ISLOCALNAME);
 	 MessageTemplate mt = MessageTemplate.MatchAll();
 	 Behaviour b = new CyclicBehaviour(this){
 		 public void action(){
@@ -38,15 +38,24 @@ public class Server extends Agent{
 						switch(r.type){
 						case "0":
 							System.out.println(this.getAgent().getName() + " to: " + r.id + " " + r.location);
+							for(int i = 0; i < r.friends.size(); i++){
+								System.out.println("Friend: " + r.friends.get(i));
+							}
 							sendMessage(propose,new AID(r.id,AID.ISLOCALNAME),null,ACLMessage.PROPOSE);
 							break;
 						case "1":
 							System.out.println(this.getAgent().getName() + " to: " + r.id + " " + r.state);
-							sendMessage(inform,new AID("Ag",AID.ISLOCALNAME),r.state,ACLMessage.INFORM);
+							for(int i = 0; i < r.friends.size(); i++){
+								System.out.println("Friend: " + r.friends.get(i));
+							}
+							sendMessage(inform,new AID("Ag2",AID.ISLOCALNAME),r.state,ACLMessage.INFORM);
 							break;
 						case "2":
 							System.out.println(this.getAgent().getName() + " to: " + r.id + " " + r.location + " " + r.time);
-							sendMessage(propose,new AID("Ag",AID.ISLOCALNAME),null,ACLMessage.PROPOSE);
+							for(int i = 0; i < r.friends.size(); i++){
+								System.out.println("Friend: " + r.friends.get(i));
+							}
+							sendMessage(propose,new AID("Ag2",AID.ISLOCALNAME),null,ACLMessage.PROPOSE);
 							break;
 						}
 						block();

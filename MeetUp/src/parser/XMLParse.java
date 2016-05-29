@@ -11,6 +11,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import java.io.*;
+import java.util.ArrayList;
 public class XMLParse {
 	private static XMLParse instance;
 	public static String id;
@@ -19,6 +20,7 @@ public class XMLParse {
 	public static String time;
 	public static String type;
 	public static String res;
+	public static ArrayList<String> friends = new ArrayList<String>();
 	public static XMLParse instance(){
 		return instance;
 	}
@@ -58,9 +60,20 @@ public class XMLParse {
 		         subElement3.appendChild(doc.createTextNode(time));
 		         rootElement.appendChild(subElement3);
 	         }
+	         if (friends != null){
+		         Element subElement3 = doc.createElement("friends");
+		         for(int i = 0; i < friends.size(); i++){
+		        	 Element friend = doc.createElement("friend");
+		         friend.appendChild(doc.createTextNode(friends.get(i)));
+		         friend.setAttribute("id", friends.get(i));
+		         subElement3.appendChild(friend);
+		         }
+		         rootElement.appendChild(subElement3);
+	         }
 	         DOMImplementationLS domImplementation = (DOMImplementationLS) doc.getImplementation();
 	         LSSerializer lsSerializer = domImplementation.createLSSerializer();
 	         res = lsSerializer.writeToString(doc);
+	         //System.out.println(res);
 	      } catch (Exception e) {
 	         e.printStackTrace();
 	      }

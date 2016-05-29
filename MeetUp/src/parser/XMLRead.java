@@ -2,6 +2,7 @@ package parser;
 
 import java.io.File;
 import java.io.StringReader;
+import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -18,20 +19,50 @@ import org.w3c.dom.Element;
 
 public class XMLRead {
 	private XMLRead instance;
-	public static String[] list;
-	public static String id;
-	public static String state;
+	public String[] list;
+	public String id;
+	public String state;
 	public String location;
+	public String time;
+	public String type;
+	//public String[] friends = new String[5];
+	public ArrayList<String> friends = new ArrayList<String>();
 	public String getLocation() {
 		return location;
 	}
 	public void setLocation(String location) {
 		this.location = location;
 	}
-	public static String time;
-	public static String type;
-	public static String result;
-	public static String xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><a><b></b><c></c></a>";  
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getState() {
+		return state;
+	}
+	public void setState(String state) {
+		this.state = state;
+	}
+	public String getTime() {
+		return time;
+	}
+	public void setTime(String time) {
+		this.time = time;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public ArrayList getFriends() {
+		return friends;
+	}
+	public void setFriends(ArrayList friends) {
+		this.friends = friends;
+	}
 	public XMLRead(){
 		instance = this;
 	}
@@ -45,9 +76,27 @@ public class XMLRead {
 		    	InputSource in = new InputSource(new StringReader(xml));
 		    	Document document = builder.parse(in);
 		    	Element rootElement = document.getDocumentElement();
-		    	//rootElement.getAttribute(id);
+		        NodeList nodeList = document.getElementsByTagName("friends")
+		                .item(0).getChildNodes();
+		            // get the immediate child (1st generation)
+		            for (int i = 0; i < nodeList.getLength(); i++)
+		            switch (nodeList.item(i).getNodeType()) { 
+		            case Node.ELEMENT_NODE:
+		            	//System.out.println(nodeList.getLength());
+		                Element element = (Element) nodeList.item(i);
+		                //System.out.println("element name: " + element.getNodeName());
+		                // check the element name
+		                if (element.getNodeName().equalsIgnoreCase("friend"))
+		                {
+		                	
+		                //System.out.println("element name:" + element.getNodeName() + " id: " + element.getAttribute("id"));
+		                friends.add(element.getAttribute("id"));
+		                }
+		                break;
+		            }
 		    	type = getString("type",rootElement);
 		        id = getString("id",rootElement);
+		        
 		    	switch(type){
 		    		case "0":
 				        location = getString("location",rootElement);

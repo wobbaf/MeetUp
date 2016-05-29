@@ -1,5 +1,8 @@
 package Connection;
 import parser.XMLRead;
+
+import java.util.ArrayList;
+
 import jade.core.*;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
@@ -16,10 +19,16 @@ public class ExAgent extends Agent{
 	ACLMessage informFinal = new ACLMessage(ACLMessage.INFORM);
 	ACLMessage accept = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
 	ACLMessage reject = new ACLMessage(ACLMessage.REJECT_PROPOSAL);
-
+	ArrayList<String> friends = new ArrayList<String>();
+ 	for(int i = 0; i < 5; i++){
+ 		String s = Integer.toString(i);
+		friends.add(s);
+	}
 	String agentID = "Server";
 	//String content = null;
 	AID receiver = new AID(agentID,AID.ISLOCALNAME);
+	String content = setContent("0", "Ag2","52.22233 21.00690",null,null,friends);
+	 sendMessage(inform,receiver,content,ACLMessage.INFORM);
 	Behaviour b = new CyclicBehaviour(this){
 		 public void action(){
 			 MessageTemplate mt = MessageTemplate.MatchAll();
@@ -29,15 +38,16 @@ public class ExAgent extends Agent{
 				 XMLRead read = new XMLRead();
 				 read.Read(rec.getContent());
 				 System.out.println("Location " + read.getLocation());
-					 String content = setContent("0", "Server","52.22233 21.00690",null,null);
-					 sendMessage(inform,rec.getSender(),content,ACLMessage.INFORM);
+					 String content = setContent("0", "Ag2","52.22233 21.00690",null,null,friends);
+					 //System.out.println(content);
+					 //sendMessage(inform,rec.getSender(),content,ACLMessage.INFORM);
 				 
 			 }
 		 }
 	};
 		Behaviour b1 = new OneShotBehaviour(this){
 			public void action(){
-				String content = setContent("0", "Ag2","14545.334 1243.123",null,null);
+				String content = setContent("0", "Ag2","14545.334 1243.123",null,null,friends);
 				sendMessage(inform,receiver,content,ACLMessage.REQUEST);
 				System.out.println(this.getAgent().getName() + " to:" + receiver.getName() + " " + content);
 				try {
@@ -52,8 +62,8 @@ public class ExAgent extends Agent{
 		addBehaviour(b);
 		//addBehaviour(b1);		
 	}
-
-	private String setContent(String type, String id, String location, String state, String time){
+	
+	private String setContent(String type, String id, String location, String state, String time, ArrayList<String> friends){
 		String content = null;
 		parser.XMLParse p = new parser.XMLParse();
 		if (type != null)
@@ -66,6 +76,8 @@ public class ExAgent extends Agent{
 			p.instance().state = state;
 		if (time != null)
 			p.instance().time = time;
+		if (friends != null)
+			p.instance().friends = friends;
 		content = p.Parse();
 		return content;
 	}
