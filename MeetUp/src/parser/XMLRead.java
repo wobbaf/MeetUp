@@ -26,7 +26,7 @@ public class XMLRead {
 	public String time;
 	public String type;
 	//public String[] friends = new String[5];
-	public ArrayList<String> friends = new ArrayList<String>();
+	public static ArrayList<String> friends = new ArrayList<String>();
 	public String getLocation() {
 		return location;
 	}
@@ -71,11 +71,13 @@ public class XMLRead {
 		{
 		    try  
 		    {  
+		    	System.out.println("Read: " + xml);
 		    	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		    	DocumentBuilder builder = factory.newDocumentBuilder();
 		    	InputSource in = new InputSource(new StringReader(xml));
 		    	Document document = builder.parse(in);
 		    	Element rootElement = document.getDocumentElement();
+		    	friends = new ArrayList<String>();
 		        NodeList nodeList = document.getElementsByTagName("friends")
 		                .item(0).getChildNodes();
 		            // get the immediate child (1st generation)

@@ -27,7 +27,7 @@ public class ExAgent extends Agent{
 	String agentID = "Server";
 	//String content = null;
 	AID receiver = new AID(agentID,AID.ISLOCALNAME);
-	String content = setContent("0", "Ag2","52.22233 21.00690",null,null,friends);
+	String content = setContent("0", this.getName(),"52.22233 21.00690",null,null,friends);
 	 sendMessage(inform,receiver,content,ACLMessage.INFORM);
 	Behaviour b = new CyclicBehaviour(this){
 		 public void action(){
@@ -38,7 +38,7 @@ public class ExAgent extends Agent{
 				 XMLRead read = new XMLRead();
 				 read.Read(rec.getContent());
 				 System.out.println("Location " + read.getLocation());
-					 String content = setContent("0", "Ag2","52.22233 21.00690",null,null,friends);
+					 String content = setContent("0", this.myAgent.getName(),"52.22233 21.00690",null,null,friends);
 					 //System.out.println(content);
 					 //sendMessage(inform,rec.getSender(),content,ACLMessage.INFORM);
 				 
@@ -47,7 +47,7 @@ public class ExAgent extends Agent{
 	};
 		Behaviour b1 = new OneShotBehaviour(this){
 			public void action(){
-				String content = setContent("0", "Ag2","14545.334 1243.123",null,null,friends);
+				String content = setContent("0", this.myAgent.getName(),"14545.334 1243.123",null,null,friends);
 				sendMessage(inform,receiver,content,ACLMessage.REQUEST);
 				System.out.println(this.getAgent().getName() + " to:" + receiver.getName() + " " + content);
 				try {

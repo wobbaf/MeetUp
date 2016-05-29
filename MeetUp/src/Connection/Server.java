@@ -1,4 +1,6 @@
 package Connection;
+import java.util.ArrayList;
+
 import jade.core.*;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
@@ -41,21 +43,41 @@ public class Server extends Agent{
 							for(int i = 0; i < r.friends.size(); i++){
 								System.out.println("Friend: " + r.friends.get(i));
 							}
-							sendMessage(propose,new AID(r.id,AID.ISLOCALNAME),null,ACLMessage.PROPOSE);
+							String content = setContent("0", rec.getSender().getName(),"52.22233 21.00690",null,null,r.friends);
+							//sendMessage(propose,new AID(r.id,AID.ISLOCALNAME),content,ACLMessage.PROPOSE);
+							for(int i = 0; i < r.friends.size(); i++){
+								try{
+								sendMessage(propose,new AID(r.friends.get(i),AID.ISLOCALNAME),content,ACLMessage.PROPOSE);
+								}
+								catch(Exception e){
+									
+								}
+							}
+							
 							break;
 						case "1":
 							System.out.println(this.getAgent().getName() + " to: " + r.id + " " + r.state);
 							for(int i = 0; i < r.friends.size(); i++){
 								System.out.println("Friend: " + r.friends.get(i));
 							}
-							sendMessage(inform,new AID("Ag2",AID.ISLOCALNAME),r.state,ACLMessage.INFORM);
+							String content1 = setContent("0", rec.getSender().getName(),"52.22233 21.00690",null,null,r.friends);
+							sendMessage(inform,new AID(r.id,AID.ISLOCALNAME),content1,ACLMessage.INFORM);
+							for(int i = 0; i < r.friends.size(); i++){
+								try{
+								sendMessage(propose,new AID(r.friends.get(i),AID.ISLOCALNAME),content1,ACLMessage.INFORM);
+								}
+								catch(Exception e){
+									
+								}
+							}
 							break;
 						case "2":
 							System.out.println(this.getAgent().getName() + " to: " + r.id + " " + r.location + " " + r.time);
 							for(int i = 0; i < r.friends.size(); i++){
 								System.out.println("Friend: " + r.friends.get(i));
 							}
-							sendMessage(propose,new AID("Ag2",AID.ISLOCALNAME),null,ACLMessage.PROPOSE);
+							String content2 = setContent("0", rec.getSender().getName(),"52.22233 21.00690",null,null,r.friends);
+							sendMessage(propose,new AID(r.id,AID.ISLOCALNAME),content2,ACLMessage.PROPOSE);
 							break;
 						}
 						block();
@@ -64,6 +86,25 @@ public class Server extends Agent{
 			}
 	 };
 	 addBehaviour(b);
+	}
+	private String setContent(String type, String id, String location, String state, String time, ArrayList<String> friends){
+		String content = null;
+		parser.XMLParse p = new parser.XMLParse();
+		//p.instance();
+		if (type != null)
+			p.instance().type = type;
+		if (id != null)
+			p.instance().id = id;
+		if (location != null)
+			p.instance().location = location;
+		if (state != null)
+			p.instance().state = state;
+		if (time != null)
+			p.instance().time = time;
+		if (friends != null)
+			p.instance().friends = new ArrayList<>(friends);
+		content = p.Parse();
+		return content;
 	}
 	private void sendMessage(ACLMessage msg, AID receiver, String content, int performative){
 		msg.setContent(content);

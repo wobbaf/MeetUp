@@ -21,8 +21,11 @@ public class XMLParse {
 	public static String type;
 	public static String res;
 	public static ArrayList<String> friends = new ArrayList<String>();
-	public static XMLParse instance(){
+	public XMLParse instance(){
+		if(instance != null)
 		return instance;
+		instance = this;
+		return this;
 	}
 	public XMLParse(){
 		instance = this;
@@ -73,7 +76,7 @@ public class XMLParse {
 	         DOMImplementationLS domImplementation = (DOMImplementationLS) doc.getImplementation();
 	         LSSerializer lsSerializer = domImplementation.createLSSerializer();
 	         res = lsSerializer.writeToString(doc);
-	         //System.out.println(res);
+	         System.out.println("Parse: " + res);
 	      } catch (Exception e) {
 	         e.printStackTrace();
 	      }
