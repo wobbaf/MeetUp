@@ -27,6 +27,8 @@ public class XMLRead {
 	public String type;
 	//public String[] friends = new String[5];
 	public static ArrayList<String> friends = new ArrayList<String>();
+	public static ArrayList<String> favPlaces = new ArrayList<String>();
+	public String placeType;
 	public String getLocation() {
 		return location;
 	}
@@ -57,11 +59,23 @@ public class XMLRead {
 	public void setType(String type) {
 		this.type = type;
 	}
+	public String getplaceType() {
+		return type;
+	}
+	public void setplaceType(String placeType) {
+		this.placeType = placeType;
+	}
 	public ArrayList getFriends() {
 		return friends;
 	}
 	public void setFriends(ArrayList friends) {
 		this.friends = friends;
+	}
+	public ArrayList getfavPlaces() {
+		return favPlaces;
+	}
+	public void setfavPlaces(ArrayList favPlaces) {
+		this.favPlaces = favPlaces;
 	}
 	public XMLRead(){
 		instance = this;
@@ -80,19 +94,25 @@ public class XMLRead {
 		    	friends = new ArrayList<String>();
 		        NodeList nodeList = document.getElementsByTagName("friends")
 		                .item(0).getChildNodes();
-		            // get the immediate child (1st generation)
 		            for (int i = 0; i < nodeList.getLength(); i++)
 		            switch (nodeList.item(i).getNodeType()) { 
 		            case Node.ELEMENT_NODE:
-		            	//System.out.println(nodeList.getLength());
 		                Element element = (Element) nodeList.item(i);
-		                //System.out.println("element name: " + element.getNodeName());
-		                // check the element name
 		                if (element.getNodeName().equalsIgnoreCase("friend"))
 		                {
-		                	
-		                //System.out.println("element name:" + element.getNodeName() + " id: " + element.getAttribute("id"));
 		                friends.add(element.getAttribute("id"));
+		                }
+		                break;
+		            }
+	            nodeList = document.getElementsByTagName("favPlaces")
+		                .item(0).getChildNodes();
+		            for (int i = 0; i < nodeList.getLength(); i++)
+		            switch (nodeList.item(i).getNodeType()) { 
+		            case Node.ELEMENT_NODE:
+		                Element element = (Element) nodeList.item(i);
+		                if (element.getNodeName().equalsIgnoreCase("favPlaces"))
+		                {
+		                favPlaces.add(element.getAttribute("placeId"));
 		                }
 		                break;
 		            }
@@ -102,9 +122,11 @@ public class XMLRead {
 		    	switch(type){
 		    		case "0":
 				        location = getString("location",rootElement);
+				        placeType = getString("placeType",rootElement);
 				        break;
 		    		case "1":
 				        state = getString("state",rootElement);
+				        location = getString("location",rootElement);
 				        break;
 		    		case "2":
 				        location = getString("location",rootElement);

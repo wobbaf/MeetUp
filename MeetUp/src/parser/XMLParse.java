@@ -21,6 +21,8 @@ public class XMLParse {
 	public static String type;
 	public static String res;
 	public static ArrayList<String> friends = new ArrayList<String>();
+	public static ArrayList<String> favPlaces = new ArrayList<String>();
+	public static String placeType;
 	public XMLParse instance(){
 		if(instance != null)
 		return instance;
@@ -63,12 +65,27 @@ public class XMLParse {
 		         subElement3.appendChild(doc.createTextNode(time));
 		         rootElement.appendChild(subElement3);
 	         }
+	         if (placeType != null){
+		         Element subElement3 = doc.createElement("placeType");
+		         subElement3.appendChild(doc.createTextNode(placeType));
+		         rootElement.appendChild(subElement3);
+	         }
 	         if (friends != null){
 		         Element subElement3 = doc.createElement("friends");
 		         for(int i = 0; i < friends.size(); i++){
 		        	 Element friend = doc.createElement("friend");
 		         friend.appendChild(doc.createTextNode(friends.get(i)));
 		         friend.setAttribute("id", friends.get(i));
+		         subElement3.appendChild(friend);
+		         }
+		         rootElement.appendChild(subElement3);
+	         }
+	         if (favPlaces != null){
+		         Element subElement3 = doc.createElement("favPlaces");
+		         for(int i = 0; i < favPlaces.size(); i++){
+		        	 Element friend = doc.createElement("favPlaces");
+		         friend.appendChild(doc.createTextNode(favPlaces.get(i)));
+		         friend.setAttribute("placeId", favPlaces.get(i));
 		         subElement3.appendChild(friend);
 		         }
 		         rootElement.appendChild(subElement3);

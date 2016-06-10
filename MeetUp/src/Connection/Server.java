@@ -1,6 +1,12 @@
 package Connection;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
+import com.example.sample.*;
+import com.example.sample.PlaceFinding.DistrictsSearch;
+import com.example.sample.User.Initiator;
+import com.example.sample.User.Invited;
 import jade.core.*;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
@@ -11,6 +17,12 @@ import jade.lang.acl.MessageTemplate;
 import parser.XMLRead;
 
 public class Server extends Agent{
+	
+	Initiator initiator; 
+	List<Invited> agreedInvitedUsers = new ArrayList<>();
+	int ctr = 0;
+	long startTime = System.currentTimeMillis();
+	boolean timeout = false;
 	@Override
 	protected void setup(){
 	ACLMessage inform = new ACLMessage(ACLMessage.INFORM);
@@ -19,31 +31,37 @@ public class Server extends Agent{
 	ACLMessage recm;
 	String agentID = "Server";
 	
-	//AID receiver = new AID(agentID,AID.ISLOCALNAME);
 	 MessageTemplate mt = MessageTemplate.MatchAll();
+	 
 	 Behaviour b = new CyclicBehaviour(this){
 		 public void action(){
 				ACLMessage rec = receive(mt);
 				if(rec != null){
-					if (rec.getPerformative() == ACLMessage.ACCEPT_PROPOSAL){
-						//TODO algorithm here
-						System.out.println(this.getAgent().getName() + ": " + rec.getSender().getName() + " - accepted");
-					}
-					if (rec.getPerformative() == ACLMessage.REJECT_PROPOSAL){
-						//TODO algorithm here
-						System.out.println(this.getAgent().getName() + ": " + rec.getSender().getName() + " - rejected");
-					}
-					else if( rec.getContent() != null){
+					if( rec.getContent() != null){
 						XMLRead r = new XMLRead();
 						String xml = rec.getContent();
 						r.Read(xml);
 						switch(r.type){
 						case "0":
+							String[] location = r.location.split(" ");
+							if(location.length<2)
+								System.out.println("Wrong location");
+									
+							com.example.sample.Utils.Location<String,String> loc = new com.example.sample.Utils.Location<String,String>(location[0],location[1]);
+							
+							
+							initiator = new Initiator(null,r.id,loc,r.placeType,r.friends);
 							System.out.println(this.getAgent().getName() + " to: " + r.id + " " + r.location);
 							for(int i = 0; i < r.friends.size(); i++){
 								System.out.println("Friend: " + r.friends.get(i));
+								//TODO: add to list of Initiator field
 							}
-							String content = setContent("0", rec.getSender().getName(),"52.22233 21.00690",null,null,r.friends);
+							
+						
+							
+							//dodac type place
+							
+							String content = setContent("0", rec.getSender().getLocalName(),null,null,null,r.friends);
 							//sendMessage(propose,new AID(r.id,AID.ISLOCALNAME),content,ACLMessage.PROPOSE);
 							for(int i = 0; i < r.friends.size(); i++){
 								try{
@@ -56,11 +74,32 @@ public class Server extends Agent{
 							
 							break;
 						case "1":
-							System.out.println(this.getAgent().getName() + " to: " + r.id + " " + r.state);
+							if(r.location != null){
+							System.out.println(this.getAgent().getName() + " to: " + r.id + " LOCATION: " + r.location + " state: " + r.state);
 							for(int i = 0; i < r.friends.size(); i++){
 								System.out.println("Friend: " + r.friends.get(i));
 							}
-							String content1 = setContent("0", rec.getSender().getName(),"52.22233 21.00690",null,null,r.friends);
+							String[] locationInvited = (r.location).split(" ");
+							if(locationInvited.length<2)
+								System.out.println("Wrong location intvited user");
+									
+							com.example.sample.Utils.Location<String,String> locUser = new com.example.sample.Utils.Location<String,String>(locationInvited[0],locationInvited[1]);
+							
+							Invited currInvited = new Invited(null,r.id,locUser);
+							agreedInvitedUsers.add(currInvited);
+							
+							if((r.friends.size() == agreedInvitedUsers.size()) || System.currentTimeMillis() - startTime >= 180000){
+								DistrictsSearch DS = new DistrictsSearch();
+								
+								 int bestDistrictForAllUsers = DS.BestPlace(initiator, agreedInvitedUsers);
+								 Stack<String> allbestPlacesForThem = DS.findClosestPlaceInBestDistrict(bestDistrictForAllUsers);
+								
+								 System.out.println(allbestPlacesForThem.toString());
+								 agreedInvitedUsers.clear();
+								 
+								}
+							// add as invited bool, iterate over list of invited and check ifAgreed 
+							String content1 = setContent("1", rec.getSender().getName(),null,"accepting",null,r.friends);
 							sendMessage(inform,new AID(r.id,AID.ISLOCALNAME),content1,ACLMessage.INFORM);
 							for(int i = 0; i < r.friends.size(); i++){
 								try{
@@ -70,19 +109,13 @@ public class Server extends Agent{
 									
 								}
 							}
-							break;
-						case "2":
-							System.out.println(this.getAgent().getName() + " to: " + r.id + " " + r.location + " " + r.time);
-							for(int i = 0; i < r.friends.size(); i++){
-								System.out.println("Friend: " + r.friends.get(i));
 							}
-							String content2 = setContent("0", rec.getSender().getName(),"52.22233 21.00690",null,null,r.friends);
-							sendMessage(propose,new AID(r.id,AID.ISLOCALNAME),content2,ACLMessage.PROPOSE);
 							break;
 						}
 						block();
 					}
 				}
+				
 			}
 	 };
 	 addBehaviour(b);
