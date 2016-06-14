@@ -32,7 +32,7 @@ public class DistrictsInformation {
             "Żoliborz"};
 
 
-    public static   enum dictionaryIndexes {
+    public static enum dictionaryIndexes {
         Bemowo,
         Białołęka,
         Bielany,

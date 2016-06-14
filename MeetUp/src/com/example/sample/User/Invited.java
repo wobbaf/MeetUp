@@ -10,14 +10,17 @@ import java.util.List;
  */
 public class Invited extends User {
 
-    private boolean hasConfirmed = false;
-
-    public Invited(boolean hasConfirmed){
-    	this.hasConfirmed = hasConfirmed;
-    }
+  
+	  private boolean hasConfirmed = false;
+	    
     
-    public Invited(List<String> idOfFavouritePlaces, String id, Location location) {
-        super(idOfFavouritePlaces, id, location);
+    public Invited(List<String> idOfFavouritePlaces, String id, Location location,boolean hasConfirmed) {
+    	 super(idOfFavouritePlaces, id, location);
+    	if(location == null)
+    		System.out.println("No location");
+    	
+    	this.hasConfirmed = hasConfirmed;
+       
     }
     
     public boolean hasConfirmed() {

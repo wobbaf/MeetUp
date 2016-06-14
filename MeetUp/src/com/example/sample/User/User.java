@@ -43,8 +43,10 @@ public class User {
     public User(List<String> idOfFavouritePlaces, String id, Location  location) {
         this.idOfFavouritePlaces = idOfFavouritePlaces;
         this.id = id;
-
-
+        
+        if(location == null)
+        	System.out.println("User location is null");
+        else{
             setDistirictName(ApiQueries.getDistrictNameQuery(location));
 
 
@@ -63,11 +65,10 @@ public class User {
 
 
         this.location = location;
+        }
        
     }
-    public User(){
-    	
-    }
+
 
 
 

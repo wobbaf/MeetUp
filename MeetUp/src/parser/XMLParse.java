@@ -20,6 +20,7 @@ public class XMLParse {
 	public static String time;
 	public static String type;
 	public static String res;
+	public static String placeId;
 	public static ArrayList<String> friends = new ArrayList<String>();
 	public static ArrayList<String> favPlaces = new ArrayList<String>();
 	public static String placeType;
@@ -68,6 +69,11 @@ public class XMLParse {
 	         if (placeType != null){
 		         Element subElement3 = doc.createElement("placeType");
 		         subElement3.appendChild(doc.createTextNode(placeType));
+		         rootElement.appendChild(subElement3);
+	         }
+	         if (placeId != null){
+		         Element subElement3 = doc.createElement("placeId");
+		         subElement3.appendChild(doc.createTextNode(placeId));
 		         rootElement.appendChild(subElement3);
 	         }
 	         if (friends != null){

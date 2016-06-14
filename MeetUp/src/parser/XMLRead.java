@@ -29,6 +29,7 @@ public class XMLRead {
 	public static ArrayList<String> friends = new ArrayList<String>();
 	public static ArrayList<String> favPlaces = new ArrayList<String>();
 	public String placeType;
+	public String placeId;
 	public String getLocation() {
 		return location;
 	}
@@ -60,10 +61,16 @@ public class XMLRead {
 		this.type = type;
 	}
 	public String getplaceType() {
-		return type;
+		return placeType;
 	}
-	public void setplaceType(String placeType) {
+	public void setplaceType(String placeId) {
 		this.placeType = placeType;
+	}
+	public String getplaceId() {
+		return placeId;
+	}
+	public void setplaceId(String placeId) {
+		this.placeId = placeId;
 	}
 	public ArrayList getFriends() {
 		return friends;
@@ -123,6 +130,7 @@ public class XMLRead {
 		    		case "0":
 				        location = getString("location",rootElement);
 				        placeType = getString("placeType",rootElement);
+				        time = getString("time",rootElement);
 				        break;
 		    		case "1":
 				        state = getString("state",rootElement);
