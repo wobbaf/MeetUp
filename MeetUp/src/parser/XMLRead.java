@@ -140,9 +140,17 @@ public class XMLRead {
 				        location = getString("location",rootElement);
 				        time = getString("time",rootElement);
 				        break;
+		    		case "3":
+				        location = getString("location",rootElement);
+				        placeId = getString("placeId",rootElement);
+				        break;
+		    		case "4":
+		    			state = getString("state",rootElement);
+				        location = getString("location",rootElement);
+				        break;
 		    	}
 		    } catch (Exception e) {  
-		        e.printStackTrace();  
+		       
 		    } 
 		}
 	   }
